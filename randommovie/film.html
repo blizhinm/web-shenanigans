@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>rnd film</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<style>
+		.structure-el {
+			display: inline-block;
+			vertical-align: top;
+		}
+		#generate-div {
+			text-align: center;
+		}
+		.hr-1-col {
+			display: none;
+		}
+		#start-btn {
+			outline: none;
+			background: transparent;
+			border: 1px solid #666;
+			padding: 8px;
+			width: 50%;
+			margin: 10px 0px;
+			border-radius: 3px;
+			font-size: 18px;
+			font-family: arial, sans-serif;
+		}
+		#start-btn:active {
+			background: #aaa;
+		}
+		#movie-info {
+			width: 30%;
+			min-width: 200px;
+			font-size: 18px;
+			font-family: arial, sans-serif;
+			text-align: center;
+		}
+		#movie-download {
+			width: 50%;
+			font-size: 18px;
+			font-family: arial, sans-serif;
+		}	
+		#movie-specs-and-subs {
+			width: 20%;
+			font-size: 18px;
+			font-family: arial, sans-serif;
+			text-align: center;
+		}	
+		.modal-torrent {
+			position: relative;
+			display: inline-block;
+			text-align: center;
+		}
+		#movie-header {
+			width: 100%;
+			height: 60px;
+			padding: 6px 0;
+			text-align: center;
+			font-size: 21px;
+			font-weight: bold;
+		}
+		@media screen and (min-width: 910px) {
+			#generate-div {
+				width: 20%;
+			}
+			#url-input {
+				width: 95%;
+			}
+			#start-btn {
+				width: 90%;
+			}
+
+			#movie-box {
+				width: 75%;
+			}
+		}
+		@media screen and (min-width: 715px) and (max-width: 909px) {
+			#generate-div {
+				width: 100%;
+			}
+
+			#movie-box {
+				width: 100%;
+			}
+		}
+		@media screen and (max-width: 714px) {
+			#generate-div {
+				width: 100%;
+			}
+
+			#movie-box {
+				width: 100%;
+				text-align: center;
+			}
+
+			.hr-1-col.visible {
+				display: block;
+				margin-bottom: 30px;
+			}
+
+			#movie-header {
+				height: 30px;
+			}
+
+			#movie-info {
+				width: 50%;
+				margin-bottom: 30px;
+			}
+			#movie-download {
+				width: 100%;
+				margin-bottom: 30px;
+			}
+			#movie-specs-and-subs {
+				width: 100%;
+				margin-bottom: 30px;
+			}
+		}
+		@media screen and (max-width: 390px) {
+			#start-btn {
+				width: 75%;
+			}
+			#movie-info {
+				width: 75%;
+			}
+		}
+		a[title="Hosted on free web hosting 000webhost.com. Host your own website for FREE."] {
+            display: none; !important
+        }
+	</style>
+</head>
+<body>
+	<div class="structure-el" id="generate-div">
+		<button id="start-btn">Loading...</button>
+	</div><div class="structure-el" id="movie-box">
+		<div class="structure-el" id="movie-header"></div><div class="structure-el" id="movie-info"></div><hr class="hr-1-col"><div class="structure-el" id="movie-download"></div><hr class="hr-1-col"><div class="structure-el" id="movie-specs-and-subs"></div>
+	</div>
+
+	<script src="jquery-3.3.1.min.js"></script>
+	<script>
+
+		$(document).ready(function(){
+
+			let movie = {};
+
+			let timer = undefined;
+
+			let url_main = "https://yts.am/browse-movies?page=";
+
+			let all_set = false;
+
+			let last_movies_page = '';
+
+			let max_page = 0;
+			let max_film = 20;
+
+			loadPagesAmount();
+
+			$("#start-btn").click(function(){
+				if(all_set) generate();
+			});
+
+			function generate(){
+				console.clear();
+				let rnd_page = getRnd(0,max_page);
+				let rnd_film = getRnd(0,max_film);
+				getMovieInfo(rnd_page,rnd_film,url_main);
+			}
+
+			function getMovieInfo(page,film,url){
+				cleanUp();
+				$.ajax({
+					url: url+page,
+					type: "GET",
+					success: function(data){
+						let movie_wrap = $(data).find(".browse-movie-wrap")[film-1];
+						$(movie_wrap).find("noscript").remove();
+						$(movie_wrap).find("img.img-responsive").attr("style","");
+						$(movie_wrap).find("img.img-responsive").attr("src",$(movie_wrap).find("img.img-responsive").attr("data-cfsrc"));
+						let link_cont = $(movie_wrap).find(".browse-movie-link");
+						let header = $(movie_wrap).find(".browse-movie-title").html()+" ("+$(movie_wrap).find(".browse-movie-year").html()+")";
+						movie.name = $(movie_wrap).find(".browse-movie-title").html();
+						movie.year = $(movie_wrap).find(".browse-movie-year").html();
+						getMovieFromUrl($(link_cont).attr("href"));
+					}
+				});
+			}
+
+			function getMovieFromUrl(url){
+				$.ajax({
+					url: url,
+					type: "GET",
+					success: function(data2){
+						let new_div = $("<div/>");
+						let mt = $(data2).find(".modal-container .modal-torrent");
+						for(let el of mt){
+							let temp = $(el).find(".download-torrent")[0];
+							$(temp).html("Torrent");
+						}
+						let subtitle_url = $(data2).find(".tech-spec-info .tech-spec-element a")[0];
+						$.ajax({
+							url: "phpscript.php",
+							type: "POST",
+							data:{
+								"url": $(subtitle_url).attr("href")
+							},
+							success: function(data3){
+								let trs = $(data3).find(".other-subs tbody tr");
+								let subs = $("<div/>");
+								$(subs).append("<br><br>");
+								for(let el of trs){
+									let link = $(el).find("td:nth-child(3) a");
+									let link_split = $(link).attr('href').split("/");
+									link_split[1] = link_split[1].substr(0,link_split[1].length-1);
+									link_split = link_split.join('/');
+									let rate = $(el).find(".rating-cell span").html();
+									if(rate.indexOf('-') == -1){
+										rate = "+"+rate;
+									}
+									$(link).html($(el).find(".flag-cell span.sub-lang").html());
+									$(link).attr("href","http://www.yifysubtitles.com"+link_split+".zip");
+									$(subs).append(rate+" ");
+									$(subs).append(link);
+									$(subs).append("<br>");
+								}
+								let tech_specs = $(data2).find(".tech-spec-info")[0];
+								let lang = undefined;
+								let time = undefined;
+								if($(tech_specs).find('span[title="Language"]')[0].nextSibling.data) lang = $(tech_specs).find('span[title="Language"]')[0].nextSibling.data;
+								if($(tech_specs).find('span[title="Runtime"]')[0].nextSibling.data) time = $(tech_specs).find('span[title="Runtime"]')[0].nextSibling.data;
+								$(new_div).append(lang);
+								$(new_div).append("<p>"+time+"</p><br>");
+								$(subtitle_url).html("All Subs");
+								$(new_div).append(subtitle_url);
+								$(new_div).append(subs);
+								$("#movie-header").html($($($(data2).find("#movie-info").children().get(0)).children()[0]).html()+" ("+$($($(data2).find("#movie-info").children().get(0)).children()[1]).html()+")");
+								let genres = $($(data2).find("#movie-info").children().get(0)).children()[2];
+								movie.rating = $(data2).find("#movie-info span[itemprop='ratingValue']").html();
+								movie.genre = $(genres).html();
+								movie.link = url;
+								movie.poster = $(data2).find("#movie-poster").children().get(0);
+								$(movie.poster).attr("style","");
+								$(movie.poster).attr("width","100%");
+								$(movie.poster).attr("height","100%");
+								let poster_link = $(movie.poster).attr("data-cfsrc");
+								$(movie.poster).attr("src",poster_link);
+								$("#movie-info").append($(movie.poster));
+								$("#movie-info").append("<h4>"+movie.rating+"</h4>");
+								$("#movie-info").append("<h4>"+$(genres).html()+"</h4>");
+								$("#movie-info").append('<a href="'+url+'" target="_blank">Link</a>');
+								$("#movie-download").append(mt);
+								$("#movie-specs-and-subs").append(new_div);
+								$(".modal-torrent").css("width","calc(100% / "+$(".modal-torrent").length+")");
+								$(".hr-1-col").addClass("visible");
+							}
+						});
+						
+					}
+				});
+			}
+
+			function cleanUp(){
+				$(".hr-1-col").removeClass("visible");
+				$("#movie-header").html("Loading...");
+				$("#movie-info").html('');
+				$("#movie-download").html('');
+				$("#movie-specs-and-subs").html('');
+				$("#adding-result").html('');
+			}
+
+			function loadPagesAmount(){
+				$.ajax({
+					url: "https://yts.am/browse-movies",
+					type: "GET",
+					success: function(html){
+						last_movies_page = $($($(html).find("div.browse-content ul.tsc_pagination.tsc_paginationA.tsc_paginationA06")[0]).children().last().find("a")).attr("href").slice(-3);
+						max_page = last_movies_page;
+						all_set = true;
+						$("#start-btn").html("Get movie");
+					}
+				});
+			}
+
+			function getRnd(min,max){
+				return Math.ceil(Math.random()*(max-min)+min);
+			}
+
+		});
+
+	</script>
+</body>
+</html>
