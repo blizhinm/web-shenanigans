@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Game</title>
+	<style>
+		body {
+			margin: 0px;
+			padding: 0px;
+			overflow: hidden;
+		}
+		#username-form{
+			position: absolute;
+			top: 35%;
+			z-index: 2;
+			display: none;
+		}
+		#canvas{
+			position: absolute;
+			top:0px;
+			left:0px;
+			z-index: 1;
+			background-image: url('sprites/map.png');
+		}
+		#username{
+			background: rgba(0,0,0,0);
+			border: 1px solid rgb(200,200,200);
+			border-radius: 6px;
+			outline: none;
+			color: white;
+			padding: 10px;
+			font-size: 21px;
+			width: 100%;
+		}
+		#username-div{
+			font-size: 21px;
+			color: white;
+			margin: 0px 0px 5px 25%;
+		}
+		#submit-btn{
+			background: rgba(0,0,0,0);
+			color: rgb(200,200,200);
+			border: 1px solid rgb(200,200,200);
+			border-radius: 6px;
+			padding: 5px;
+			outline: none;
+			width: 50%;
+			margin: 5px 25%;
+		}
+		#submit-btn:hover{
+			color: white;
+			border-color: white;
+		}
+		#sounds {
+			position: absolute;
+			left: 15px;
+			top: 10px;
+			z-index: 5;
+		}
+		#icon_mute {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+<form id="username-form">
+	<div id="username-div">What is your name?</div>
+	<input id="username" type="text">	
+	<button id="submit-btn">OK</button>
+</form>
+<div id="sounds">
+	<img id="icon_mute" src="sprites/icon_mute.png"><img id="icon_play" src="sprites/icon_play.png">
+</div>
+<div id="canvas"></div>
+<script src="assets/js/jquery.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="script_main.js"></script>
+</body>
+</html>
