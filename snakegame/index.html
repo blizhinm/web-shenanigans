@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Snake</title>
+	<style>
+		body {
+			margin: 0px;
+			padding: 0px;
+			overflow: hidden;
+		}
+		canvas {
+			margin: 0px 0px 0px 10px;
+			border: 2px solid black;
+			width: 400px;
+			height: 400px;
+		}
+		#score-wrapper {
+			font-weight: bold;
+			font: 20px arial;
+			margin: 5px 0px 5px 10px;
+			width: 400px;
+		}
+		#score {
+			float: left;
+		}
+		#bestscore {
+			float: right;
+		}
+		#diff {
+			position: absolute;
+			left: 180px;
+		}
+		#game-div {
+			/*display: none;*/
+		}
+		button {
+			margin: auto;
+			border: 1px solid black;
+			color: black;
+			background: white;
+			border-radius: 4px;
+			font: 17px arial;
+			outline: none;
+		}
+		button:hover {
+			background: rgb(235,235,235);
+		}
+		#buttons .selected {
+			/*background: rgb(220,220,220);*/
+			font: 20px arial;
+		}
+		#buttons {
+			width: 400px;
+			text-align: center;
+		}
+		#buttons div {
+			font: 15px arial;
+		}
+	</style>
+</head>
+<div id="game-div">
+	<div id='score-wrapper'><div id="score">Score: 0</div><span id="diff"></span><span id='bestscore'>Best: 0</span></div>
+	<canvas id="canvas"></canvas>
+</div>
+<div id="buttons">
+	<button diff='Slow' speed="10" num="0" save="2">Slow</button>
+	<button diff='Normal' speed="15" num="1" save="3">Normal</button>
+	<button diff='Fast' speed="25" num="2" save="3">Fast</button>
+	<button diff='Insane' speed="50" num="3" save="5">Insane</button>
+	<div style="margin-top:5px">WASD/ARROWS - Move, SHIFT - Pause</div>
+	
+</div>
+<body>
+<script src="jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+	// var width = window.innerWidth;
+	// var height = window.innerHeight;
+	var interval;
+    var game_size = 400;
+	// document.getElementById('score-wrapper').style.width = game_size+'px';
+	var width = game_size;
+	var height = game_size;
+	var canvas = document.getElementById('canvas');
+	canvas.width = width;
+	canvas.height = height;
+	var ctx = canvas.getContext('2d');
+
+	var up,down,left,right = false;	
+	var game_frame_rate = 20;
+
+	var hue = 0;
+	// var step = Math.floor(10*game_size/300);
+	var step = 10;
+	var size = step;
+	ctx.lineWidth = 1;
+	var draw = false;
+
+	var cols = Math.floor(width/step);
+	var rows = Math.floor(height/step);
+	var x = Math.floor(cols/2)*step;
+	var y = Math.floor(rows/2)*step;
+
+	var snake_dots = [];
+	var food_dot = new dot(-10,-10,hue);
+	var food = true;
+	var make_longer = false;
+
+	var snake_begin_size = 2;
+
+	var snake_size = snake_begin_size;
+	var snake_speed_size = 1;
+
+	var score = 0;
+	var score_mult = 1;
+	var difficulty = '';
+	var diff_num = 0;
+	var score_div = document.getElementById('score');
+	var best_score_span = document.getElementById('bestscore');
+	var difficulty_span = document.getElementById('diff');
+	var gameover = false;
+	var pause = false;
+
+	var best_score = 0;	
+
+	var save_time_const = 5;
+	var save_time = save_time_const;
+
+	var collision = true;
+
+	$('#buttons button').on('click', function(){
+		save_time_const = $(this).attr('save');
+		game_frame_rate = $(this).attr('speed');
+		difficulty = $(this).attr('diff');
+		diff_num = $(this).attr('num');
+		$("#buttons button").removeClass('selected');
+		$(this).attr('class' ,'selected');
+		loading();
+		$(this).blur();
+	});
+
+	function startOver(){
+		gameover = false;
+		score = 0;
+		save_time = save_time_const;
+		x = Math.floor(cols/2)*step;
+		y = Math.floor(rows/2)*step;
+		snake_dots = [];
+		snake_size = snake_begin_size;
+		left = up = right = down = false;
+		pause = false;
+		make_longer = false;
+		food = true;
+		draw = true;
+		$('#buttons').hide();
+		clearInterval(interval);
+		start();
+	}
+
+	function loading(){
+		getBestScore();
+		ctx.fillStyle = 'white';
+		ctx.fillRect(0,0,width,height);
+		ctx.fillStyle = 'black';
+		ctx.font = '30px arial';
+		ctx.fillText("Loading...",game_size/2-7*9,game_size/3);
+		$("#buttons").hide();
+	}
+
+	document.addEventListener('keydown', function(e){
+		if(!left) left = false;
+		if(!up) up = false;
+		if(!right) right = false;
+		if(!down) down = false;
+		if(gameover && e.keyCode == 32){
+			loading();
+		}else if(e.keyCode == 16){
+			if(pause == true){
+				pause = false;
+				draw = true;
+				$('#buttons').hide();
+			}else{
+				pause = true;
+				$('#buttons').show();
+			}
+		}
+		// if(e.keyCode == 17){
+		// 	if(make_longer == true){
+		// 		make_longer = false;
+		// 	}else{
+		// 		make_longer = true;
+		// 	}
+		// }
+		else if(e.keyCode == 37 || e.keyCode == 65){
+			if(!right){
+				left = true;
+				up = false;
+				right = false;
+				down = false;
+			}
+		}else if(e.keyCode == 38 || e.keyCode == 87){
+			if(!down){
+				left = false;
+				up = true;
+				right = false;
+				down = false;
+			}
+		}else if(e.keyCode == 39 || e.keyCode == 68){
+			if(!left){
+				left = false;
+				up = false;
+				right = true;
+				down = false;
+			}
+		}else if(e.keyCode == 40 || e.keyCode == 83){
+			if(!up){
+				left = false;
+				up = false;
+				right = false;
+				down = true;
+			}
+		}
+	});
+
+	function start(){
+		interval = setInterval(function(){
+			if(draw && !pause && !gameover){
+				ctx.fillStyle = 'rgba(255,255,255,1)';
+				ctx.fillRect(0,0,width,height);
+
+				ctx.fillStyle = 'black';
+
+				if(make_longer == true) snake_size += 0.5;
+
+				if(collision == true && snake_dots.length <= snake_size){
+					snake_dots.push(new dot(x,y,hue));
+				}
+
+				if(food == true){
+					food_dot.x = Math.floor(getRndm(0,cols))*step;
+					food_dot.y = Math.floor(getRndm(0,rows))*step;
+					// food_dot.hue = hue;
+					food = false;
+				}
+
+				// hue += 1;
+
+				if(left){
+					x -= step;
+				}else if(right){
+					x += step;
+				}else if(up){
+					y -= step;
+				}else if(down){
+					y += step;
+				}
+
+				//if(x >= width) x = 0;
+				//else if(x < 0) x = width;
+				//if(y >= height) y = 0;
+				//else if(y < 0) y = height;
+
+				for(var i = 0; i < snake_dots.length; i++){
+					// if(distance(food_dot.x,food_dot.y,snake_dots[i].x,snake_dots[i].y) < 1){
+					// 	food = true;
+					// snake_size++;
+					// }
+					for(var j = 0; j < snake_dots.length; j++){
+						if(collision == true && snake_dots.length > snake_begin_size && snake_dots[i] != snake_dots[j] && snake_dots[i].x == snake_dots[j].x && snake_dots[i].y == snake_dots[j].y){
+							gameover = true;
+						}
+					}
+
+					if(snake_dots[i].x == food_dot.x && snake_dots[i].y == food_dot.y){
+						food = true;
+						snake_size += snake_speed_size;
+						score += 10*score_mult;
+					}
+					// ctx.fillStyle = 'hsl('+snake_dots[i].hue+',100%,50%)';
+					// if(i == 0) ctx.fillStyle = 'rgba(0,0,0,0.5)';
+					// else if(i == snake_dots.length-1) ctx.fillStyle = 'rgba(0,0,0,1)';
+					// else ctx.fillStyle = 'rgba(0,0,0,0.7)';
+					ctx.fillRect(snake_dots[i].x,snake_dots[i].y,size,size);
+				}
+
+				// ctx.fillStyle = 'hsl('+food_dot.hue+',100%,50%)';
+				ctx.fillRect(food_dot.x,food_dot.y,size,size);
+
+				score_div.innerHTML = 'Score: '+score;
+				difficulty_span.innerHTML = difficulty;
+				best_score_span.innerHTML = 'Best: '+best_score;
+
+				if(collision == true && snake_dots.length >= snake_size){
+					snake_dots.splice(0,1);
+				}
+			}else if(pause){
+				if(draw){
+					ctx.fillStyle = 'rgba(255,255,255,0.75)';
+					ctx.fillRect(0,0,width,height);
+					ctx.fillStyle = 'black';
+					ctx.font = '30px arial';
+					ctx.fillText("Pause",game_size/2-5*9,game_size/3);
+					draw = false;
+				}
+			}else if(gameover){
+				if(draw){
+					sendScore(score);
+					ctx.fillStyle = 'rgba(255,255,255,0.75)';
+					ctx.fillRect(0,0,width,height);
+					ctx.fillStyle = 'black';
+					ctx.font = '30px arial';
+					ctx.fillText("Game Over",game_size/2-9*9,game_size/3);
+					ctx.font = '15px arial';
+					ctx.fillText("Press Space button",game_size/2-18*3.75,game_size/3+30);
+					pause = false;
+					draw = false;
+					make_longer = false;
+					$('#buttons').show();
+				}
+			}
+
+			if(x >= width || x < 0 || y >= height || y < 0){
+				save_time--;
+				if(x >= width) x = width-step;
+				else if(x < 0) x = 0;
+				if(y >= height) y = height-step;
+				else if(y < 0) y = 0;
+				collision = false;
+				// left = false;
+				// up = false;
+				// right = false;
+				// down = false;
+			 	if(save_time <= 0) gameover = true;
+			}else{
+				save_time = save_time_const;
+				collision = true;
+			}
+		},1000/game_frame_rate);
+	}
+
+	function sendScore(score){
+		$.ajax({
+			url: 'score.php',
+			type: 'POST',
+			data: {
+				"score": score,
+				"difficulty": diff_num
+			}
+			// success: function(data){
+			// 	getBestScore();
+			// }
+		});
+	};
+
+	function getBestScore(){
+		$.ajax({
+			url: 'getbestscore.php',
+			type: 'POST',
+			data: {
+				"difficulty": diff_num
+			},
+			success: function(data){
+				best_score = data;
+				startOver();
+			}
+		});
+	};
+
+	function dot(x,y,hue){
+		this.x = x;
+		this.y = y;
+		this.hue = hue;
+	}
+
+	function toRadians(degrees){
+		return degrees*(Math.PI/180);
+	}
+	function getRndm(min,max) {
+		return Math.random()*(max-min)+min;
+	}
+	function distance(x1,y1,x2,y2){
+		return Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+	}
+	function drawLine(x1,y1,x2,y2){
+		ctx.beginPath();
+		ctx.moveTo(x1,y1);
+		ctx.lineTo(x2,y2);
+		ctx.stroke();
+	}
+});
+</script>
+</html>
