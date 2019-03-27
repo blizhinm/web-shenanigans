@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Projects</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/stylesProjects.css">
+</head>
+<body>
+	<nav class="nav">
+		<ul>
+			<li>Проекты</li>
+			<li><img src="assets/imgs/boss.png"><span>admin<span></li>
+			<li id="exit-btn"><a href="#">Выход</a></li>
+		</ul>
+	</nav>
+
+	<div id="choosetype">
+		<div>Выберите тип объекта:<button id="choosetype-close-btn"><img src="assets/imgs/cancel.svg"></button></div>
+		<div>
+			<ul class="type-list">
+				<li>Одежда</li>
+				<li>Аксессуары
+					<ul class="type-list-more">
+						<li>Браслеты</li>
+						<li>Кулоны</li>
+						<li>Цепочки</li>
+					</ul>
+				</li>
+				<li>Мебель</li>
+				<li>Машины</li>
+			</ul>
+		</div>
+	</div>
+
+	<div id="choosename">
+		<div>Выберете имя проекта:<button id="choosename-close-btn"><img src="assets/imgs/cancel.svg"></button></div>
+		<div>Аксессуаыры - Браслеты</div>
+		<div>
+			<input type="text"><button id="choosename-btn">OK</button>
+		</div>
+	</div>
+
+	<div id="blackscreen"></div>
+
+	<div id="wrapper">
+		<ul id="projects-list">
+			<li>
+				<button id="Name01-delete-btn" class="project-delete-btn"><img src="assets/imgs/deleteCross32.png" alt=""></button>
+				<div id="project-preview"><img src="assets/imgs/thumb1.png" width="200px" height="200px"></div>
+				<div id="Name01-div" class="project-name">New project 1<button id="Name01-btn" class="project-name-edit-btn"><img src="assets/imgs/editBlack.png"></button></div>
+				<div id="Name01-edit-panel" class="project-edit-panel"><input type="text" class="project-name-edit-input"><button><img src="assets/imgs/accept.svg"></button><button><img src="assets/imgs/cancel.svg"></button></div>
+			</li>
+			<li>
+				<button id="Name01-delete-btn" class="project-delete-btn"><img src="assets/imgs/deleteCross32.png" alt=""></button>
+				<div id="project-preview"><img src="assets/imgs/thumb_default.png" width="200px" height="200px"></div>
+				<div id="Name01-div" class="project-name">Браслет 1<button id="Name01-btn" class="project-name-edit-btn"><img src="assets/imgs/editBlack.png"></button></div>
+				<div id="Name01-edit-panel" class="project-edit-panel"><input type="text" class="project-name-edit-input"><button><img src="assets/imgs/accept.svg"></button><button><img src="assets/imgs/cancel.svg"></button></div>
+			</li>
+			<li>
+				<button id="Name01-delete-btn" class="project-delete-btn"><img src="assets/imgs/deleteCross32.png" alt=""></button>
+				<div id="project-preview"><img src="assets/imgs/thumb_example2.png" width="200px" height="200px"></div>
+				<div id="Name01-div" class="project-name">Пример браслета<button id="Name01-btn" class="project-name-edit-btn"><img src="assets/imgs/editBlack.png"></button></div>
+				<div id="Name01-edit-panel" class="project-edit-panel"><input type="text" class="project-name-edit-input"><button><img src="assets/imgs/accept.svg"></button><button><img src="assets/imgs/cancel.svg"></button></div>
+			</li>
+		</ul>
+
+		<button id="delete-project-btn"><img src="assets/imgs/delete.png"></button>
+		<button id="create-project-btn">+</button>
+	</div>
+
+	<script src="assets/js/jquery-3.3.1.min.js"></script>
+		
+	<script>
+		$(".type-list-more").fadeToggle(0);
+		$("#Name01-btn").click(function(){
+			$("#Name01-div").hide();
+			$("#Name01-edit-panel").show();
+		});
+
+		$("#delete-project-btn").click(function(){
+			$("#Name01-delete-btn").toggle();
+		});
+
+		$(".nav li").click(function(){
+			$("#exit-btn").toggle();
+		});
+
+		$(".type-list li").click(function(){
+			$(this).find(".type-list-more").fadeToggle(500);
+		});
+
+		$("#create-project-btn").click(function(){
+			$("#choosetype").fadeToggle(500);
+			$("#blackscreen").fadeToggle(500);
+		});
+
+		$(".type-list-more li").click(function(){
+			$("#choosetype").fadeToggle(500);
+			$("#choosename").fadeToggle(500);
+		});
+
+		$("#choosename-close-btn").click(function(){
+			$("#choosetype").fadeToggle(500);
+			$("#choosename").fadeToggle(500);
+		});
+
+		$("#choosetype-close-btn").click(function(){
+			$("#choosetype").fadeToggle(500);
+			$("#blackscreen").fadeToggle(500);
+		});
+
+		window.addEventListener('keydown', function(e){
+			if(e.keyCode == 38){
+				$(".type-list-more").fadeToggle(500);
+			}
+		});
+	</script>
+
+	<script src="assets/js/three.min.js"></script>
+	<script src="assets/js/TrackballControls.js"></script>
+	<!-- <script src="assets/js/3dscriptForProjectPreview.js"></script> -->
+</body>
+</html>

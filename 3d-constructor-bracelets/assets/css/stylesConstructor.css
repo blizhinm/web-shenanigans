@@ -1,0 +1,266 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	background: rgb(65,65,65);
+}
+
+a {
+	color: white;
+	text-decoration: none;
+}
+
+#nav {
+	position: fixed;
+	left: 0;
+	top: 0;
+	background: rgb(33,33,33);
+	width: 100%;
+	height: 65px;
+	color: white;
+	padding: 0;
+	margin: 0px;
+}
+
+#back-to-projects {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#back-to-projects button {
+	background: transparent;
+	border: none;
+	outline: none;
+	margin: 0;
+	height: 65px;
+	color: white;
+	font-size: 20px;
+	text-align: center;
+	line-height: 65px;
+	padding: 0 22px 0 10px;
+}
+
+#back-to-projects img {
+	position: relative;
+	top: 8px;
+}
+
+#back-to-projects button:hover {
+	/*background: rgb(45,45,45);*/
+}
+
+#login-name {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 20px 20px 0 0;
+	font-size: 18px;
+}
+
+#project-name {
+	padding: 0;
+	margin: 5px auto 0 auto;
+	text-align: center;
+}
+
+#project-name div:nth-child(1) {
+	margin: 0 0 5px 0;
+	font-size: 24px;
+}
+
+#project-name div:nth-child(2) {
+	margin: 0 0 0 0;
+}
+
+#left-block {
+	position: fixed;
+	top: 65px;
+	left: 0px;
+	background: rgb(45,45,45);
+	width: 20%;
+	height: calc(100% - 65px);
+	overflow-y: auto;
+}
+
+.explorer-folder, .explorer-folder-item {
+	color: white;
+	padding: 0;
+	cursor: default;
+}
+
+.explorer-folder-hover-div, .explorer-folder-item-hover-div {
+	padding: 10px 0 10px 20px;
+}
+
+.explorer-folder-hover-div:hover, .explorer-folder-item-hover-div:hover {
+	background: rgb(35,35,35);
+}
+
+.explorer-folder-items-list, .explorer-folder-item-objects-list {
+	padding: 0px 0 5px 10px;
+	margin: 0px;
+	list-style-type: none;
+}
+
+.explorer-folder-items-list li, .explorer-folder-item-objects-list li {
+	padding: 5px 0 5px 10px;
+}
+
+.explorer-folder-item-objects-list li {
+	padding: 5px 0 5px 40px;
+}
+
+.explorer-folder-item-objects-list li.active {
+	background: rgb(38,38,38);
+	color: rgb(200,200,200);
+}
+
+.explorer-folder-item-objects-list li:hover {
+	background: rgb(38,38,38);
+}
+
+.explorer-folder img {
+	margin: 0 5px 0 0;
+}
+
+#middle-block {
+	position: fixed;
+	top: 65px;
+	left: 20%;
+	background: rgb(25,25,25);
+	width: 50%;
+	height: calc(100% - 65px);
+}
+
+#preview-canvas {
+	width: 100%;
+	height: 100%;
+}
+
+#right-block {
+	position: fixed;
+	top: 65px;
+	left: 70%;
+	background: rgb(45,45,45);
+	width: 30%;
+	height: calc(100% - 95px);
+	overflow-y: auto;
+	padding-top: 30px;
+}
+
+.properties-objects-split {
+	position: fixed;
+	top: 65px;
+	left: 70%;
+	width: 30%;
+	height: 30px;
+	background: rgb(25,25,25);
+	color: white;
+	font-size: 20px;
+	text-align: center;
+	line-height: 28px;
+}
+
+#properties-tab-all-objects {
+	position: relative;
+	display: inline-block;
+	cursor: default;
+	width:49%;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+}
+
+#properties-tab-object-name {
+	display: inline-block;
+	cursor: default;
+	width:50%;
+	border-bottom: 1px solid black;
+}
+
+.properties-tab-objects-type-name.active {
+	background: rgb(50,50,50);
+}
+
+.properties-panel {
+	color: white;
+	padding: 10px;
+	cursor: default;
+	background: rgb(38,38,38);
+	margin: 10px 0 0 0;
+}
+
+.properties-panel-header:hover {
+	background: rgb(30,30,30);
+}
+
+.properties-panel-header.active {
+	background: rgb(30,30,30);
+}
+
+.properties-panel-header {
+	padding: 10px 0 10px 20px;
+}
+
+.properties-panel-header span {
+	width: 80%;
+	display: inline-block;
+	text-align: center;
+}
+
+.properties-panel-header img {
+	margin: 0 10px 0 0;
+}
+
+.properties-panel-content {
+	background: rgb(30,30,30);
+	position: relative;
+}
+
+.properties-panel-content-list {
+	padding: 0 0 10px 20px;
+	margin: 0;
+	display: inline-block;
+	list-style-type: none;
+}
+
+.properties-panel-content-list li {
+	width: 80px;
+	height: 80px;
+	float: left;
+	margin: 10px 10px 20px 0;
+	text-align: center;
+}
+
+.properties-panel-content-list li div{
+
+}
+
+.color-box {
+	padding: 5px 10px 40px 10px;
+}
+
+.preview-box {
+	background: rgb(255,255,255);
+	width: 75px;
+	height: 75px;
+	border: 1px solid #666;
+	float: left;
+}
+
+.value-name-label, .slider-bar, .value-input {
+	float: left;
+	margin: 0px 0px 0px 10px;
+}
+
+.value-input {
+	outline: none;
+	border: 1px solid rgb(125,125,125);
+	background: rgb(45,45,45);
+	color: white;
+	width: 27px;
+	text-align: center;
+}
+
+.rope-only {
+	display: none;
+}

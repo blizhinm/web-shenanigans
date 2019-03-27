@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Constructor</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/stylesConstructor.css">
+</head>
+<body>
+	<nav id="nav">
+		<div id="back-to-projects"><button><a href="projects.html"><img src="assets/imgs/backWhite.png">Проекты</button></a></div>
+		<div id="project-name">
+			<div>Новый проект 1</div>
+			<div>Браслеты</div>
+		</div>
+		<div id="login-name">admin</div>
+	</nav>
+
+	<div id="left-block">
+		<div class="explorer-folder"><div class="explorer-folder-hover-div"><img src="assets/imgs/caret-down.png"><span>Объекты</span></div>
+			<ul class="explorer-folder-items-list">
+				<li>
+					<div class="explorer-folder-item"><div class="explorer-folder-item-hover-div"><img src="assets/imgs/caret-down.png"><span>Основание</span></div>
+						<ul id="explorer-base-ul" class="explorer-folder-item-objects-list">
+							
+						</ul>
+					</div>
+				</li>
+				<li>
+					<div class="explorer-folder-item"><div class="explorer-folder-item-hover-div"><img src="assets/imgs/caret-down.png"><span>Бусы</span></div>
+						<ul id="explorer-beads-ul" class="explorer-folder-item-objects-list">
+							
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div id="middle-block">
+		<div id="preview-canvas"></div>
+	</div>
+	<div id="right-block">
+		<div class="properties-objects-split"><div id="properties-tab-all-objects" class="properties-tab-objects-type-name active">Все</div><div id="properties-tab-object-name" class="properties-tab-objects-type-name">...</div></div>
+		<div class="properties-panel"><div class="properties-panel-header"><img src="assets/imgs/caret-down.png"><span>Форма</span></div>
+			<div class="properties-panel-content">
+				<ul id="shapes-list" class="properties-panel-content-list">
+					<li class="beads-only" value="0"><div><img src="assets/textures/bead_form_1.png" width="80px" height="80px"></div>Форма 1</li>
+					<li class="beads-only" value="1"><div><img src="assets/textures/bead_form_2.png" width="80px" height="80px"></div>Форма 2</li>
+					<li class="beads-only" value="2"><div><img src="assets/textures/bead_form_3.png" width="80px" height="80px"></div>Форма 3</li>
+					<li class="beads-only" value="3"><div><img src="assets/textures/bead_form_4.png" width="80px" height="80px"></div>Форма 4</li>
+				</ul>
+			</div>
+		</div>
+		<div class="properties-panel"><div class="properties-panel-header"><img src="assets/imgs/caret-down.png"><span>Свойства</span></div>
+			<div class="properties-panel-content">
+				<label class="value-name-label">Размер:</label>
+				<input id="object-size-value" class="slider-bar" type="range" min="0.1" max="0.5" step="0.01" value="0.1">
+				<input type="text" class='value-input' id="object-size-input" size="2" maxlength="2" value="0.1"></input><br><br>
+			</div>
+		</div>
+		<div class="properties-panel"><div class="properties-panel-header"><img src="assets/imgs/caret-down.png"><span>Материал и цвет</span></div>
+			<div class="properties-panel-content">
+				<ul id="textures-list" class="properties-panel-content-list">
+					<li class="rope-only"><div><img src="assets/textures/rope1.png" width="80px" height="80px"></div>Веревка 1</li>
+					<li class="beads-only"><div><img src="assets/textures/wood1.jpg" width="80px" height="80px"></div>Дерево 1</li>
+					<li class="beads-only"><div><img src="assets/textures/wood2.jpg" width="80px" height="80px"></div>Дерево 2</li>
+					<li class="beads-only"><div><img src="assets/textures/wood3.jpg" width="80px" height="80px"></div>Дерево 3</li>
+					<li class="beads-only"><div><img src="assets/textures/wood4.jpg" width="80px" height="80px"></div>Дерево 4</li>
+					<li class="beads-only"><div><img src="assets/textures/evil_eye.png" width="80px" height="80px"></div>Глаз 1</li>
+				</ul>
+				<div class="color-box">
+					<div class="preview-box" id="objects-color-preview"></div>
+					<label class="value-name-label">r:</label>
+					<input id="object-color-red-value" class="slider-bar" type="range" min="0" max="255" step="1" value="255">
+					<input type="text" class='value-input' id="object-color-red-input" size="3" maxlength="3" value="255"></input><br><br>
+					<label class="value-name-label">g:</label>
+					<input id="object-color-green-value" class="slider-bar" type="range" min="0" max="255" step="1" value="255">
+					<input type="text" class='value-input' id="object-color-green-input" size="3" maxlength="3" value="255"></input><br><br>
+					<label class="value-name-label">b:</label>
+					<input id="object-color-blue-value" class="slider-bar" type="range" min="0" max="255" step="1" value="255">
+					<input type="text" class='value-input' id="object-color-blue-input" size="3" maxlength="3" value="255"></input>
+				</div>
+			</div>
+		</div>
+		<div class="properties-panel all-only"><div class="properties-panel-header"><img src="assets/imgs/caret-down.png"><span>Кол-во объектов</span></div>
+			<div class="properties-panel-content">
+				<label class="value-name-label">Кол-во бус:</label>
+				<input id="all-objects-amount-value" class="slider-bar" type="range" min="5" max="40" step="1" value="40">
+				<input type="text" class='value-input' id="all-objects-amount-input" size="2" maxlength="2" value="40"></input><br><br>
+			</div>
+		</div>
+	</div>
+	
+	<script src="assets/js/jquery-3.3.1.min.js"></script>
+	<script src="assets/js/three.min.js"></script>
+	<script src="assets/js/TrackballControls.js"></script>
+	<script src="assets/js/3dscript.js"></script>
+</body>
+</html>
