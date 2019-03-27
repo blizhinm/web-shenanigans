@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>expressions</title>
+	
+	<style>
+		body {
+			margin: 0px;
+			padding: 0px;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+	<link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
+	<script src='devision.js'></script>
+	<script>
+		var canvas = document.createElement("canvas");
+		var ctx = canvas.getContext("2d");
+		var activeEl = null;
+		var mouseX, mouseY;
+		var mouseCliked = false;
+		var enough = false;
+		var timer = 0;
+		var correct = 0;
+		var incorrect = 0;
+		var score = 0;
+		var correct_audio = new Audio('correct3.mp3');
+		var wrong_audio = new Audio('wrong2.mp3');
+		var exps = new Array();
+		var exps_per_round = 5;
+		var level = 0;
+		var num = 0;
+		window.onload = function(){
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			document.body.appendChild(canvas);
+			setInterval(function(){
+				timer+=1;
+				if(enough == false && timer%60==0 && exps.length <= exps_per_round){
+					if(num < 5){
+						num++;
+					}else {
+						num = 0;
+					}
+					switch(num){
+						case 1:
+							var randomnum1 = Math.floor(getRndm(1,10+(level*100)));
+							var randomnum2 = Math.floor(getRndm(1,10+(level*100)));
+							exps.push(new expression(getRndm(100,canvas.width-200),getRndm(100,canvas.height-200),Math.floor(getRndm(25,30)),'VT323',getRndm(-0.5,0.5),getRndm(-0.5,0.5),''+randomnum1+'+'+randomnum2,randomnum1+randomnum2,1));
+							break;
+						case 2:
+							var randomnum1 = Math.floor(getRndm(1,10+(level*100)));
+							var randomnum2 = Math.floor(getRndm(1,10+(level*100)));
+							exps.push(new expression(getRndm(100,canvas.width-200),getRndm(100,canvas.height-200),Math.floor(getRndm(25,30)),'VT323',getRndm(-0.5,0.5),getRndm(-0.5,0.5),''+randomnum1+'-'+randomnum2,randomnum1-randomnum2,2));
+							break;
+						case 3:
+							var randomnum1 = Math.floor(getRndm(2,10+(level*10)));
+							var randomnum2 = Math.floor(getRndm(2,10+(level*10)));
+							exps.push(new expression(getRndm(100,canvas.width-200),getRndm(100,canvas.height-200),Math.floor(getRndm(25,30)),'VT323',getRndm(-0.5,0.5),getRndm(-0.5,0.5),''+randomnum1+'*'+randomnum2,randomnum1*randomnum2,3));
+							break;
+						case 4:
+							var randomnum = Math.floor(getRndm(0,10+(level*100)));
+							var randomnum1 = devision.nums[randomnum];
+							var randomnum2 = devision.deviders[randomnum][Math.floor(getRndm(0,devision.deviders[randomnum].length-1))];
+							exps.push(new expression(getRndm(100,canvas.width-200),getRndm(100,canvas.height-200),Math.floor(getRndm(25,30)),'VT323',getRndm(-0.5,0.5),getRndm(-0.5,0.5),''+randomnum1+'/'+randomnum2,Math.floor(randomnum1/randomnum2),4));
+							break;
+						case 5:
+							var randomnum1 = Math.floor(getRndm(2,level+2));
+							var randomnum2 = Math.floor(getRndm(2,level+2));
+							exps.push(new expression(getRndm(100,canvas.width-200),getRndm(100,canvas.height-200),Math.floor(getRndm(27,30)),'VT323',getRndm(-0.5,0.5),getRndm(-0.5,0.5),''+randomnum1+'^'+randomnum2,Math.pow(randomnum1,randomnum2),5));
+						break;
+					}	
+				}else if(exps.length==exps_per_round){
+					enough = true;
+					exps_per_round += 2;
+					level++;
+				}
+				if(exps.length<=0){
+					enough = false;
+				}
+				ctx.fillStyle = 'rgba(25,25,25,1)';
+				ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+				ctx.fillStyle = 'rgba(10,250,10,1)';
+				ctx.font = '25px VT323';
+				ctx.fillText('correct: '+correct,10,33);
+				ctx.fillStyle = 'rgba(255,10,10,1)';
+				ctx.fillText('incorrect: '+incorrect,130,33);
+				ctx.fillStyle = 'rgb(10,250,250)';
+				ctx.fillText('score: '+score,canvas.width-150,33);
+				ctx.fillStyle = 'rgb(250,250,10)';
+				ctx.fillText('level: '+level,canvas.width/2.25,33);
+				for(var i = 0; i < exps.length; i++){
+					exps[i].move()
+					exps[i].show()
+					if(exps[i].kill == true){
+						exps[i].alpha -= 0.006;
+						if(exps[i].alpha <= 0){
+							if(activeEl == exps[i]){
+								activeEl = null;
+							}
+							exps.splice(i,1);
+						}
+					}
+				}
+			}, 10);
+		}
+		window.addEventListener('resize',function(){
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		});
+		function expression(x,y,size,font,velX,velY,value,result,type){
+			this.x = x;
+			this.y = y;
+			this.size = size;
+			this.font = font;
+			this.alpha = 0;
+			this.kill = false;
+			this.r = Math.floor(getRndm(50,255));
+			this.g = Math.floor(getRndm(50,255));
+			this.b = Math.floor(getRndm(50,255));
+			this.color = 'rgba('+this.r+','+this.g+','+this.b+','+this.alpha+')';
+			this.value = value;
+			this.velX = velX;
+			this.velY = velY;
+			this.result = result;
+			this.type = type;
+			if(this.type==5){
+				this.value2 = this.value.substring(this.value.indexOf('^')+1);
+				this.value1 = this.value.substring(this.value.indexOf('^'),-1);
+			}
+			this.move = function(){
+				this.x += this.velX;
+				this.y += this.velY;
+				if(this.x <= 0){
+					this.velX *= -1;
+				}else if(this.x >= canvas.width-this.value.length*this.size/2.5){
+					this.velX *= -1;
+				}
+				if(this.y <= this.size+27.5){
+					this.velY *= -1;
+				}else if(this.y >= canvas.height-this.size/4){
+					this.velY *= -1;
+				}
+				if(this.kill == false && this.alpha <=1 ){
+					this.alpha += 0.0025;
+				}
+			};
+			this.show = function(){
+				ctx.fillStyle = this.color;
+				ctx.font = this.size+'px '+this.font;
+				if(mouseover(this.x,this.y-this.size/1.25,this.size/2.5*this.value.length,this.size)){
+					if(mouseCliked){
+						activeEl = this;
+						activeEl_val = '';
+					}
+					this.color = 'rgba('+(this.r+70)+','+(this.g+70)+','+(this.b+70)+','+this.alpha+')';
+				}else{
+					this.color = 'rgba('+(this.r)+','+(this.g)+','+(this.b)+','+this.alpha+')';
+				}
+				if(activeEl == this){
+					if(this.type==5){
+						ctx.fillText(this.value1,this.x,this.y);
+						ctx.font = (this.size-7)+'px '+this.font;
+						ctx.fillText(this.value2,this.x+this.size/2.5,this.y-9);	
+						ctx.font = this.size+'px '+this.font;
+						ctx.fillText('='+activeEl_val,this.x+this.size/1.25,this.y);
+						this.color = 'rgba('+(this.r+70)+','+(this.g+70)+','+(this.b+70)+','+this.alpha+')';
+					}else{
+						ctx.fillText(this.value+'='+activeEl_val,this.x,this.y);	
+						this.color = 'rgba('+(this.r+70)+','+(this.g+70)+','+(this.b+70)+','+this.alpha+')';
+					}
+				}else{
+					if(this.type==5){
+						ctx.fillText(this.value1,this.x,this.y);	
+						ctx.font = (this.size-7)+'px '+this.font;
+						ctx.fillText(this.value2,this.x+this.size/2.5,this.y-9);	
+					}else{
+						ctx.fillText(this.value,this.x,this.y);	
+					}
+				}
+				// ctx.strokeStyle = this.color;
+				// ctx.strokeRect(this.x,this.y-this.size/1.25,this.size/2.5*this.value.length,this.size);
+			};
+		}
+		document.addEventListener('keydown',function(e){
+			if(e.keyCode == 8){
+				if(activeEl_val.length>0){
+					activeEl_val = activeEl_val.slice(0,-1);
+				}
+			}
+		});
+		document.addEventListener('keyup',function(e){
+			if(e.keyCode >= 48 && e.keyCode <= 57 || e.keyCode == 8 || e.keyCode == 189 && activeEl != null){
+				if(e.keyCode >= 48 && e.keyCode <= 57 || e.keyCode == 189){
+					if(e.keyCode != 189 && activeEl_val.length < activeEl.result.toFixed(0).length){
+						activeEl_val += String.fromCharCode(e.keyCode);
+					}else if(e.keyCode == 189 && activeEl_val.length < 1){
+						activeEl_val += '-';
+					}
+				}
+				if(activeEl_val.length == activeEl.result.toFixed(0).length && activeEl_val == activeEl.result){
+					correct_audio.play();
+					if(activeEl.kill == false){
+						correct++;
+						score += 100*activeEl.type;
+					}
+					activeEl.kill = true;
+				}else if(activeEl_val.length == activeEl.result.toFixed(0).length && activeEl_val != activeEl.result){
+					wrong_audio.play();
+					if(activeEl.kill == false){
+						incorrect++;
+					}
+					if(score > 50){
+						score -= 50;
+					}
+				}
+			}
+			// if(e.keyCode == 16){
+			// 	for(var i = 0; i < exps.length; i++){
+			// 		if(exps[i].type!=5){
+			// 			exps[i].value += '='+exps[i].result;
+			// 		}else {
+			// 			exps[i].value1 += ' ='+exps[i].result;
+			// 		}
+			// 		score += 100*exps[i].type;
+			// 		exps[i].kill = true;
+			// 		correct_audio.play();
+			// 	}
+			// }
+		});
+		document.addEventListener('mousedown', function(e){
+			mouseCliked = true;
+			if(activeEl!=null && !mouseover(activeEl.x,activeEl.y-activeEl.size/1.25,activeEl.size/2.5*activeEl.value.length,activeEl.size)){
+				activeEl = null;
+			}
+		});
+		document.addEventListener('mouseup', function(e){
+			mouseCliked = false;
+		});
+		document.addEventListener('mousemove', function(e){
+			mouseX = e.pageX;
+			mouseY = e.pageY;
+		});
+		function getRndm(min,max) {
+			return (Math.random()*(max-min)+min);
+		}
+		function mouseover(x,y,width,height){
+			if(mouseX>=x && mouseX<=x+width && mouseY>=y && mouseY<=y+height){
+				return true;
+			}else {
+				return false;
+			}
+		}
+	</script>
+</body>
+</html>
