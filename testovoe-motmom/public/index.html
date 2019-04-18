@@ -1,0 +1,80 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>Testovoe</title>
+	<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+	<div id="main-wrapper">
+		<div id="events-form_container">
+			<div id="events-form_container_header">Мероприятия</div>
+			<div id="events-form_container_wrap">
+				<div id="events-form_wrapper">
+					<ul id="main-ul"></ul>
+					<button id="events-add_button">Добавить Мероприятие</button>
+				</div>
+				<div id="add-event-form_container">
+					<div id="add-event-form_wrapper">
+						<div id="add-event-form_header">Новое мероприятие</div>
+						<form id="add-event-form">
+							<div class="add-event-form_input-div">
+								<label for="add-event-form_event-name-input">Название:</label>
+								<input type="text" name="event-name" id="add-event-form_event-name-input">
+							</div>
+							<div class="add-event-form_input-div">
+								<label for="add-event-form_event-time-input">Время:</label>
+								<input type="text" name="event-time" id="add-event-form_event-time-input" placeholder="00:00" maxlength="5">
+							</div>
+							<div id="add-event-form_buttons" class="add-event-form_input-div">
+								<input type="submit" value="OK"><button id="add-event-form_cancel-btn">Cancel</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="modify-events-form_wrapper">
+			<div id="modify-events-form_header">Время</div>
+			<div id="modify-events-form_wrap">
+				<div id="modify-events-form_header_options">
+					<div class="modify-events_options_container">
+						<div id="modify-events_options-info_start-time" class="modify-events_options-info">
+							<span>Начало:</span>
+							<span>00:00</span>
+						</div>
+						<div class="modify-events_options-input">
+							<label for="modify-events_options_start-time">0</label><input type="range" id="modify-events_options_start-time" min="0" max="11" value="8" step="1"><label for="modify-events_options_start-time">11</label>
+						</div>
+					</div>
+					<div class="modify-events_options_container">
+						<div id="modify-events_options-info_end-time" class="modify-events_options-info">
+							<span>Конец:</span>
+							<span>23:00</span>
+						</div>
+						<div class="modify-events_options-input">
+							<label for="modify-events_options_end-time">12</label><input type="range" id="modify-events_options_end-time" min="12" max="24" value="16" step="1"><label for="modify-events_options_end-time">24</label>
+						</div>
+					</div>
+					<div class="modify-events_options_container">
+						<div id="modify-events_options-info_period" class="modify-events_options-info">
+							<span>Период:</span>
+							<span>30</span>
+							<span>мин.</span>
+						</div>
+						<div class="modify-events_options-input">
+							<label for="modify-events_options_period">5</label><input type="range" id="modify-events_options_period" min="5" max="55" value="30" step="5"><label for="modify-events_options_period">55</label>
+						</div>
+					</div>
+				</div>
+				<div id="modify-events-form">
+					<ul id="modify-events-form_ul"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+<script src="assets/jquery-3.3.1.min.js"></script>
+<script src="assets/scriptmain.js"></script>
+</body>
+</html>

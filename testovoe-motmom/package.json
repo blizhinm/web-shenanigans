@@ -1,0 +1,15 @@
+{
+  "name": "testovoe",
+  "version": "1.0.0",
+  "description": "Testovoe zadanie",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Maxim Blizhin",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
+}
