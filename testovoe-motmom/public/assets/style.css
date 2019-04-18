@@ -70,7 +70,7 @@
 	align-items: center;
 }
 .main-ul_item.active {
-	background: #aaa;
+	background: #ccc;
 }
 .main-ul_item .event-item_checkbox {
 }
