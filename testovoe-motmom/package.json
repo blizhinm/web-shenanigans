@@ -1,7 +1,7 @@
 {
-  "name": "testovoe",
+  "name": "testovoe-motmom",
   "version": "1.0.0",
-  "description": "Testovoe zadanie",
+  "description": "Testovoe zadanie MOTMOM",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
