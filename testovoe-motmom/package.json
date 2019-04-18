@@ -8,6 +8,9 @@
   },
   "author": "Maxim Blizhin",
   "license": "ISC",
+  "engines":{
+    "node":"10.15.3"
+  },
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4"
