@@ -4,15 +4,20 @@
   "description": "Testovoe zadanie MOTMOM",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "webpack"
   },
   "author": "Maxim Blizhin",
   "license": "ISC",
-  "engines":{
-    "node":"10.15.3"
+  "engines": {
+    "node": "10.15.3"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1"
   }
 }
