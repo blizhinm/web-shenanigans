@@ -13,7 +13,7 @@ app.listen(PORT ,() => {
 	console.log(`Server running on port ${PORT}`);
 });
 
-const eventsFilePath = './public/assets/events.json'; // путь к файлу с мероприятиями
+const eventsFilePath = './public/src/events.json'; // путь к файлу с мероприятиями
 
 // функция чтения файла, возвращающая promise
 const readFile = filePath => {
